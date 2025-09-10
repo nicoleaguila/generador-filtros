@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+   <link rel="stylesheet" src="huincha.css">
+  <title>Generador de Filtros</title>
+
+</head>
+<body>
+
+  <h2>Generador de Código de Filtros</h2>
+
+  <!-- Campo para el Logo -->
+  <div class="block">
+    <div class="form-group">
+      <label>Logo (URL)</label>
+      <input type="text" id="logo" placeholder="https://images.contentstack.io/.../logo.png">
+    </div>
+  </div>
+
+  <!-- Contenedor dinámico de ítems -->
+  <div id="items-container"></div>
+
+  <!-- Botones -->
+  <button onclick="addItem()">+ Agregar ítem</button>
+  <button onclick="generateCode()">Generar Código</button>
+  <button onclick="copyCode()">Copiar Código</button>
+
+  <div class="preview" id="output"></div>
+
+ <script src="huincha.js"></script>
+
+</body>
+</html>
