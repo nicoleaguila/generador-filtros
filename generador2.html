@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Generador de Filtros</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #333;
+      color: white;
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin-bottom: 3px;
+    }
+    input {
+      width: 100%;
+      padding: 6px;
+      border: none;
+      border-radius: 3px;
+    }
+    .block {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #444;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 15px;
+      background: #ff4081;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px 5px 15px 0;
+    }
+    .preview {
+      margin-top: 20px;
+      padding: 15px;
+      background: #222;
+      white-space: pre-wrap;
+      font-family: monospace;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Generador de Código de Filtros</h2>
+
+  <!-- Campo para el Logo -->
+  <div class="block">
+    <div class="form-group">
+      <label>Logo (URL)</label>
+      <input type="text" id="logo" placeholder="https://images.contentstack.io/.../logo.png">
+    </div>
+  </div>
+
+  <!-- Contenedor dinámico de ítems -->
+  <div id="items-container"></div>
+
+  <!-- Botones -->
+  <button onclick="addItem()">+ Agregar ítem</button>
+  <button onclick="generateCode()">Generar Código</button>
+  <button onclick="copyCode()">Copiar Código</button>
+
+  <div class="preview" id="output"></div>
+
+  <script>
+    let itemCount = 0;
+    const maxItems = 6;
+
+    function addItem() {
+      if (itemCount >= maxItems) {
+        alert("Solo puedes agregar hasta " + maxItems + " ítems");
+        return;
+      }
+
+      itemCount++;
+      const container = document.getElementById("items-container");
+
+      const block = document.createElement("div");
+      block.className = "block";
+      block.innerHTML = `
+        <div class="form-group">
+          <label>Texto ${itemCount}</label>
+          <input type="text" id="text${itemCount}" placeholder="Ej: Maquillaje ${itemCount}">
+        </div>
+        <div class="form-group">
+          <label>Imagen ${itemCount} (URL)</label>
+          <input type="text" id="img${itemCount}" placeholder="https://images...">
+        </div>
+        <div class="form-group">
+          <label>URL ${itemCount}</label>
+          <input type="text" id="url${itemCount}" placeholder="https://www.falabella.com/...">
+        </div>
+      `;
+
+      container.appendChild(block);
+    }
+
+    // Cargar 3 ítems por defecto
+    for (let i = 0; i < 3; i++) {
+      addItem();
+    }
+
+    function generateCode() {
+      const logo = document.getElementById('logo').value.trim();
+      let items = "";
+
+      for (let i = 1; i <= itemCount; i++) {
+        const text = document.getElementById(`text${i}`).value.trim();
+        const img = document.getElementById(`img${i}`).value.trim();
+        const url = document.getElementById(`url${i}`).value.trim();
+
+        if (text && img && url) {
+          items += `
+                <div class="item">
+                    <a href="${url}">
+                        <img src="${img}" title="${text}" alt="${text}">
+                        <h3>${text}</h3>
+                    </a>
+                </div>`;
+        }
+      }
+
+      const fullCode = `
+ href="https://assets.contentstack.io/v3/assets/blt7c5c2f2f888a7cc3/bltbf57ee07d5468449/huincha-banner-plp.css">
+
+<style>
+    /* TAMAÑO TITULOS ITEMS */
+    .contenedor-items .sub_container .item h3{
+        font-size: 18.7px;
+    }
+</style>
+
+<div class="contenedor_banner_plp">
+    <!-- logo -->
+    <img src="${logo || 'https://images.contentstack.io/default-logo.png'}" alt="logo">
+    
+    <!-- items -->
+    <div class="contenedor-items">
+        <div class="sub_container">
+            ${items}
+        </div>
+    </div>
+</div>`;
+
+      document.getElementById('output').textContent = fullCode;
+    }
+
+    function copyCode() {
+      const output = document.getElementById('output').textContent;
+      if (!output) {
+        alert("Primero genera el código.");
+        return;
+      }
+      navigator.clipboard.writeText(output).then(() => {
+        alert("Código copiado al portapapeles ✅");
+      });
+    }
+  </script>
+
+</body>
+</html>
